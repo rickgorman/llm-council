@@ -10,6 +10,24 @@ In a bit more detail, here is what happens when you submit a query:
 2. **Stage 2: Review**. Each individual LLM is given the responses of the other LLMs. Under the hood, the LLM identities are anonymized so that the LLM can't play favorites when judging their outputs. The LLM is asked to rank them in accuracy and insight.
 3. **Stage 3: Final response**. The designated Chairman of the LLM Council takes all of the model's responses and compiles them into a single final answer that is presented to the user.
 
+## Quickstart
+
+```bash
+# Clone and install
+git clone https://github.com/rickgorman/llm-council.git
+cd llm-council
+uv sync
+
+# Add your OpenRouter API key
+echo "OPENROUTER_API_KEY=sk-or-v1-..." > .env
+
+# Run a query via CLI
+uv run python cli.py "What are the pros and cons of microservices?"
+
+# Or run the web interface
+./start.sh  # then open http://localhost:5173
+```
+
 ## Vibe Code Alert
 
 This project was 99% vibe coded as a fun Saturday hack because I wanted to explore and evaluate a number of LLMs side by side in the process of [reading books together with LLMs](https://x.com/karpathy/status/1990577951671509438). It's nice and useful to see multiple responses side by side, and also the cross-opinions of all LLMs on each other's outputs. I'm not going to support it in any way, it's provided here as is for other people's inspiration and I don't intend to improve it. Code is ephemeral now and libraries are over, ask your LLM to change it in whatever way you like.
@@ -78,6 +96,36 @@ npm run dev
 ```
 
 Then open http://localhost:5173 in your browser.
+
+## CLI Mode
+
+For quick queries without the web interface, use the CLI:
+
+```bash
+# Basic query (shows only the final synthesis)
+uv run python cli.py "What is the best programming language for beginners?"
+
+# Show all stages (individual responses, peer rankings, and synthesis)
+uv run python cli.py --all "Compare React and Vue"
+
+# Show aggregate rankings with the final synthesis
+uv run python cli.py --rankings "What are the benefits of meditation?"
+
+# Read prompt from a file
+uv run python cli.py --file prompt.txt
+
+# Pipe input from another command
+echo "Explain quantum computing" | uv run python cli.py
+```
+
+### CLI Options
+
+| Option | Description |
+|--------|-------------|
+| `prompt` | The question to send to the council |
+| `-f, --file` | Read prompt from a file |
+| `-a, --all` | Show all stages (1, 2, and 3) |
+| `-r, --rankings` | Show aggregate rankings with final synthesis |
 
 ## Tech Stack
 
